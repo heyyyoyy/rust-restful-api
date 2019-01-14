@@ -1,7 +1,7 @@
 use diesel;
 use diesel::prelude::*;
 use super::super::schema;
-use super::Post;
+use super::models::Post;
 
 
 pub fn all(con: &PgConnection) -> QueryResult<Vec<Post>> {
