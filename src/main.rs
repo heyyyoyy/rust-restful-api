@@ -17,5 +17,6 @@ mod db;
 
 fn main() {
     dotenv::dotenv().ok();
-    posts::routes::create_routes().launch();
+    let server = rocket::ignite().manage(db::init_pool());
+    posts::routes::create_routes(server).launch();
 }

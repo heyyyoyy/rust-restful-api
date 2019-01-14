@@ -1,11 +1,9 @@
 use super::handlers;
-use rocket;
-use super::super::db;
+use rocket::Rocket;
 
 
-pub fn create_routes() -> rocket::Rocket{
-    rocket::ignite()
-        .manage(db::init_pool())
+pub fn create_routes(server: Rocket) -> Rocket{
+    server
         .mount("/posts",
                routes![handlers::all,
                               handlers::create_post,
