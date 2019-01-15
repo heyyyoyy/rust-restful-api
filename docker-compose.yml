@@ -1,0 +1,31 @@
+version: '3'
+
+services:
+  db:
+    environment:
+      POSTGRES_USER: "${POSTGRES_USER}"
+      POSTGRES_DB: "${POSTGRES_DB}"
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
+    image: postgres:alpine
+    volumes:
+      - ./pg:/var/lib/postgresql/data
+  web:
+    restart: on-failure
+    depends_on:
+      - db
+      - migration
+    build: .
+    environment:
+      ROCKET_ENV: ${ROCKET_ENV}
+      DATABASE_URL: "${DATABASE_URL}"
+    ports:
+      - "8000:8000"
+  migration:
+    image: clux/diesel-cli
+    environment:
+      DATABASE_URL: ${DATABASE_URL}
+    volumes:
+      - .:/tmp
+    command: sh -c "cd tmp && diesel migration run"
+    depends_on:
+      - db
