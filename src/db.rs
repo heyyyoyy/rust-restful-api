@@ -14,7 +14,11 @@ pub fn init_pool() -> Pool {
     let manager = ConnectionManager::<PgConnection>::new(
         env::var("DATABASE_URL").expect("DATABASE_URL")
     );
-    Pool::new(manager).expect("Error with create pool")
+    let size = env::var("POOL_SIZE").expect("POOL_SIZE");
+    let u_size = size.parse::<u32>().expect("Not parse pool size");
+    Pool::builder().max_size(u_size)
+        .build(manager)
+        .expect("Error with build poll connection")
 }
 
 pub struct DbConn(pub r2d2::PooledConnection<ConnectionManager<PgConnection>>);

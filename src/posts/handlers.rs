@@ -1,4 +1,4 @@
-use super::models::Post;
+use super::models::{NewPost, Post};
 use rocket_contrib::json::{Json};
 use super::super::db::DbConn;
 use super::queries;
@@ -20,15 +20,15 @@ pub fn get(id: i32, con: DbConn) -> JsonResponse<Post, String> {
 }
 
 #[post("/", format = "application/json", data = "<post>")]
-pub fn create_post(con: DbConn, post: Json<Post>) -> JsonResponse<Post, String> {
+pub fn create_post(con: DbConn, post: Json<NewPost>) -> JsonResponse<Post, String> {
     queries::create(post.into_inner(), &con)
         .map_or_else(|err| JsonResponse::Error(err.to_string()),
         |post| JsonResponse::Success(post))
 }
 
-#[put("/<id>", format = "application/json", data = "<person>")]
-pub fn put_post(id: i32, person: Json<Post>, con: DbConn) -> JsonResponse<Post, String> {
-    queries::update(id, person.into_inner(), &con)
+#[put("/<id>", format = "application/json", data = "<post>")]
+pub fn put_post(id: i32, post: Json<NewPost>, con: DbConn) -> JsonResponse<Post, String> {
+    queries::update(id, post.into_inner(), &con)
         .map_or_else(|err| JsonResponse::Error(err.to_string()),
                      |post| JsonResponse::Success(post))
 }

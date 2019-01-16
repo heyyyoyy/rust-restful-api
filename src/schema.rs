@@ -1,6 +1,6 @@
 table! {
     post (id) {
-        id -> Nullable<Integer>,
+        id -> Int4,
         title -> Varchar,
         description -> Text,
     }
